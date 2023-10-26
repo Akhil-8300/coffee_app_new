@@ -47,6 +47,7 @@ class CustomDropDown extends StatelessWidget {
   final List<CategoryModel> categories;
   final CategoryModel? selectedCategory;
   final ValueChanged<CategoryModel?> onChanged;
+
   const CustomDropDown(
       {super.key,
       required this.categories,
@@ -56,6 +57,7 @@ class CustomDropDown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<CategoryModel>(
+      // hint: Text('-Select-'),
       value: selectedCategory,
       onChanged: onChanged,
       items: categories.map((CategoryModel category) {

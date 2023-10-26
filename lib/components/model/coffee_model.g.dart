@@ -22,13 +22,14 @@ class CoffeeModelAdapter extends TypeAdapter<CoffeeModel> {
       category: fields[2] as String,
       imagePath: fields[3] as String,
       quantity: fields[4] as int,
+      id: fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, CoffeeModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class CoffeeModelAdapter extends TypeAdapter<CoffeeModel> {
       ..writeByte(3)
       ..write(obj.imagePath)
       ..writeByte(4)
-      ..write(obj.quantity);
+      ..write(obj.quantity)
+      ..writeByte(5)
+      ..write(obj.id);
   }
 
   @override

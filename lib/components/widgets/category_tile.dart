@@ -1,5 +1,5 @@
 import 'package:coffee_app_new/components/model/category_model.dart';
-import 'package:coffee_app_new/components/widgets/colors.dart';
+import 'package:coffee_app_new/components/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class CategoryTile extends StatelessWidget {

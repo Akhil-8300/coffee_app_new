@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 
 Future<void> addCoffeetoDb(
     {required String productId, required CoffeeModel coffee}) async {
-  var coffeebox = await Hive.openBox<CoffeeModel>('CoffeeBox');
+  var coffeebox = await Hive.openBox<CoffeeModel>('CoffeeBox1');
   await coffeebox.put(productId, coffee);
 }
 
@@ -16,6 +16,18 @@ Future<void> addCategoryToDb(
     {required String categoryId, required CategoryModel category}) async {
   var categoryBox = await Hive.openBox<CategoryModel>('CategoryBox');
   await categoryBox.put(categoryId, category);
+}
+
+Future<void> updateCategoryDb(
+    {required String categoryId, required CategoryModel category}) async {
+  var categoryBox = await Hive.openBox<CategoryModel>('CategoryBox');
+  await categoryBox.put(categoryId, category);
+}
+
+Future<void> updateItemsDb(
+    {required String productId, required CoffeeModel coffee}) async {
+  var coffeebox = await Hive.openBox<CoffeeModel>('CoffeeBox1');
+  await coffeebox.put(productId, coffee);
 }
 // //getcoffee can be used later for some other purpose.
 // void getCoffee() async {
@@ -34,6 +46,8 @@ Future<dynamic> pickImage() async {
     String base64Image = base64Encode(imageBytes);
     debugPrint('PickImage Executed');
     return base64Image;
+  } else {
+    return "No Image Picked";
   }
 }
 

@@ -1,8 +1,6 @@
+import 'package:coffee_app_new/components/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-
-
-
 
 class MyBottomNavBar extends StatelessWidget {
   final void Function(int)? onTabChange;
@@ -14,13 +12,13 @@ class MyBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(25),
+      margin: const EdgeInsets.all(10),
       child: GNav(
-        onTabChange: (value) =>  onTabChange!(value),
-        color: Colors.grey[400],
-        activeColor: Colors.grey[700],
+        onTabChange: (value) => onTabChange!(value),
+        color: menuTileInactive,
+        activeColor: menuTileActive,
         tabBorderRadius: 24,
-        tabBackgroundColor:  Colors.grey.shade300,
+        tabBackgroundColor: Colors.grey.shade300,
         tabActiveBorder: Border.all(color: Colors.white),
         gap: 8,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -28,14 +26,13 @@ class MyBottomNavBar extends StatelessWidget {
           GButton(
             icon: Icons.home,
             iconSize: 30,
-             text: 'Shop',
+            text: 'Shop',
           ),
           GButton(
             icon: Icons.shopping_bag_rounded,
             iconSize: 30,
             text: 'Cart',
           ),
-          
         ],
       ),
     );

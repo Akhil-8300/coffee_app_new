@@ -6,3 +6,5 @@ var white=Colors.white;
 var subTitles = Colors.brown;
 var textboxlabel=Colors.brown[300];
 var coffeeTileBg=Colors.grey[200];
+var menuTileInactive=Colors.grey[400];
+var menuTileActive=Colors.brown;

@@ -3,14 +3,16 @@ import 'package:coffee_app_new/components/model/coffee_model.dart';
 import 'package:coffee_app_new/db/db_helper.dart';
 import 'package:flutter/material.dart';
 
-class CoffeeTile extends StatelessWidget {
+class AdminCoffeeTile extends StatelessWidget {
   final CoffeeModel coffee;
-  final void Function()? onPressed;
+  final void Function()? onEdit;
+  final void Function()? onDelete;
 
-  const CoffeeTile({
+  const AdminCoffeeTile({
     super.key,
     required this.coffee,
-    required this.onPressed,
+    this.onEdit,
+    this.onDelete,
   });
 
   @override
@@ -36,12 +38,20 @@ class CoffeeTile extends StatelessWidget {
           ),
         ),
         subtitle: Text('\u{20B9}${coffee.price}'),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.arrow_forward,
-            color: Colors.brown[300],
-          ),
-          onPressed: onPressed,
+        trailing: Wrap(
+          children: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.edit,
+                color: Colors.brown[300],
+              ),
+              onPressed: onEdit,
+            ),
+            IconButton(
+              onPressed: onDelete,
+              icon: const Icon(Icons.delete),
+            ),
+          ],
         ),
       ),
     );

@@ -1,9 +1,12 @@
-import 'package:coffee_app_new/components/widgets/colors.dart';
+import 'package:coffee_app_new/components/constants/colors.dart';
+import 'package:coffee_app_new/components/constants/font_style.dart';
 import 'package:coffee_app_new/components/widgets/my_bottom_navbar.dart';
-import 'package:coffee_app_new/screen/screen_about.dart';
-import 'package:coffee_app_new/screen/screen_cart.dart';
-import 'package:coffee_app_new/screen/screen_intro.dart';
-import 'package:coffee_app_new/screen/screen_shop.dart';
+import 'package:coffee_app_new/screen/user/screen_about.dart';
+import 'package:coffee_app_new/screen/user/screen_cart.dart';
+
+import 'package:coffee_app_new/screen/user/screen_intro.dart';
+import 'package:coffee_app_new/screen/user/screen_shop.dart';
+
 import 'package:flutter/material.dart';
 
 class ScreenHome extends StatefulWidget {
@@ -34,15 +37,17 @@ class _ScreenHomeState extends State<ScreenHome> {
         onTabChange: (index) => navigateBottomBar(index),
       ),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        title: const AppBarTitle(),
+        centerTitle: true,
+        backgroundColor: mainTitles,
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: const Padding(
-              padding: EdgeInsets.all(14.0),
+            icon: Padding(
+              padding: const EdgeInsets.all(14.0),
               child: Icon(
                 Icons.menu,
-                color: Colors.black,
+                color: white,
               ),
             ),
             onPressed: () {
@@ -52,7 +57,7 @@ class _ScreenHomeState extends State<ScreenHome> {
         ),
       ),
       drawer: Drawer(
-        backgroundColor: mainbg,
+        backgroundColor: mainTitles,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -62,7 +67,7 @@ class _ScreenHomeState extends State<ScreenHome> {
 
                 // logo
                 Image.asset(
-                  "assets/images/espresso.png",
+                  "assets/images/logo.png",
                   height: 160,
                 ),
 
@@ -80,17 +85,40 @@ class _ScreenHomeState extends State<ScreenHome> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child: const ListTile(
+                    child: ListTile(
                       leading: Icon(
                         Icons.home,
+                        color: white,
                       ),
-                      title: Text(
-                        "Home",
-                      ),
+                      title: const MenuText(data: 'Home'),
                     ),
                   ),
                 ),
+                GestureDetector(
+                  onTap: () {
+                    // pop drawer
+                    Navigator.pop(context);
 
+                    // go to new page
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const ScreenAbout(),
+                    //   ),
+                    // );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 25.0),
+                    child: ListTile(
+                        leading: Icon(
+                          Icons.account_circle_rounded,
+                          color: white,
+                        ),
+                        title: const MenuText(
+                          data: 'Profile',
+                        )),
+                  ),
+                ),
                 // about
                 GestureDetector(
                   onTap: () {
@@ -105,16 +133,16 @@ class _ScreenHomeState extends State<ScreenHome> {
                       ),
                     );
                   },
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 25.0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 25.0),
                     child: ListTile(
-                      leading: Icon(
-                        Icons.info,
-                      ),
-                      title: Text(
-                        "About",
-                      ),
-                    ),
+                        leading: Icon(
+                          Icons.info,
+                          color: white,
+                        ),
+                        title: const MenuText(
+                          data: 'App Info',
+                        )),
                   ),
                 ),
               ],
@@ -127,15 +155,14 @@ class _ScreenHomeState extends State<ScreenHome> {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (ctx) => const ScreenIntro()));
               },
-              child: const Padding(
-                padding: EdgeInsets.only(left: 25.0, bottom: 25),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 25.0, bottom: 25),
                 child: ListTile(
                   leading: Icon(
                     Icons.logout,
+                    color: white,
                   ),
-                  title: Text(
-                    "Logout",
-                  ),
+                  title: const MenuText(data: 'Logout'),
                 ),
               ),
             ),

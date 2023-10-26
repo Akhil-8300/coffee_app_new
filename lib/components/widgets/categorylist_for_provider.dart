@@ -13,7 +13,7 @@ class CategoryList extends StatelessWidget {
       if (provider.categories.isEmpty) {
         provider.getCategoryData();
         return const Center(child: CircularProgressIndicator());
-      } else {provider.getCategoryData();
+      } else {
         return ListView.builder(
             itemCount: provider.categories.length,
             itemBuilder: (context, index) {

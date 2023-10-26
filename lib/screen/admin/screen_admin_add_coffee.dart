@@ -1,9 +1,11 @@
-import 'package:coffee_app_new/components/widgets/colors.dart';
-import 'package:coffee_app_new/components/widgets/font_style.dart';
+import 'package:coffee_app_new/components/constants/colors.dart';
+import 'package:coffee_app_new/components/constants/font_style.dart';
 import 'package:coffee_app_new/components/model/coffee_model.dart';
+import 'package:coffee_app_new/components/model/coffee_shop.dart';
 import 'package:coffee_app_new/components/widgets/my_textfield.dart';
 import 'package:coffee_app_new/db/db_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 late String image;
 
@@ -22,8 +24,11 @@ class _AddCoffeeToDBState extends State<AddCoffeeToDB> {
   final TextEditingController quantityController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
+  // var selectedCategory = null;
   @override
   Widget build(BuildContext context) {
+    final itemProvider = Provider.of<CoffeeShopProvider>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -42,14 +47,63 @@ class _AddCoffeeToDBState extends State<AddCoffeeToDB> {
           child: Column(
             children: [
               MyCustomTextField(
-                  label: 'Product Id', controller: productidController),
-              MyCustomTextField(label: 'Name', controller: nameController),
-             // const CategoryDropDown(),
+                label: 'Product Id',
+                controller: productidController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter a valid ID';
+                  } else {
+                    return null;
+                  }
+                },
+              ),
+              MyCustomTextField(
+                label: 'Name',
+                controller: nameController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter a valid Name';
+                  } else {
+                    return null;
+                  }
+                },
+              ),
+
+              // CustomDropDown(
+              //     categories: categoryProvider.categories,
+              //     selectedCategory: selectedCategory,
+              //     onChanged: (CategoryModel? newCategory) {
+              //       setState(() {
+              //         selectedCategory = newCategory!;
+              //         debugPrint(selectedCategory.toString());
+              //       });
+              //     }),
               MyCustomTextField(
                   label: 'Category', controller: categoryController),
-              MyCustomTextField(label: 'Price', controller: priceController),
               MyCustomTextField(
-                  label: 'Quantity', controller: quantityController),
+                label: 'Price',
+                controller: priceController,
+                type: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter a valid Price';
+                  } else {
+                    return null;
+                  }
+                },
+              ),
+              MyCustomTextField(
+                label: 'Quantity',
+                controller: quantityController,
+                type: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter a valid ID';
+                  } else {
+                    return null;
+                  }
+                },
+              ),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(backgroundColor: subTitles),
                 onPressed: () async {
@@ -63,6 +117,7 @@ class _AddCoffeeToDBState extends State<AddCoffeeToDB> {
                 style: ElevatedButton.styleFrom(backgroundColor: mainTitles),
                 onPressed: () {
                   addCoffee();
+                  itemProvider.getCoffeeData();
                 },
                 child: const Text('Add Coffee'),
               ),
@@ -72,21 +127,33 @@ class _AddCoffeeToDBState extends State<AddCoffeeToDB> {
       ),
     );
   }
-
+void showSuccessSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Success'),
+        backgroundColor: Colors.green,
+        margin: EdgeInsets.all(10),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
   void addCoffee() async {
     final productId = productidController.text.trim();
     final name = nameController.text.trim();
     final category = categoryController.text.trim();
     final price = priceController.text.trim();
     final imagefile = image;
-    debugPrint(imagefile);
+    debugPrint(name);
     final quantity = int.parse(quantityController.text.trim());
     final coffee = CoffeeModel(
-        name: name,
-        price: price,
-        category: category,
-        imagePath: imagefile,
-        quantity: quantity);
+      id: productId,
+      name: name,
+      price: price,
+      category: category,
+      imagePath: imagefile,
+      quantity: quantity,
+    );
+
     if (formKey.currentState!.validate()) {
       await addCoffeetoDb(productId: productId, coffee: coffee);
       nameController.clear();
@@ -95,6 +162,7 @@ class _AddCoffeeToDBState extends State<AddCoffeeToDB> {
       quantityController.clear();
       productidController.clear();
       debugPrint('success');
+      showSuccessSnackBar();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

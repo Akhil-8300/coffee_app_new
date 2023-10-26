@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:coffee_app_new/components/widgets/colors.dart';
+import 'package:coffee_app_new/components/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class MyHeadings extends StatelessWidget {
@@ -83,6 +83,35 @@ class ButtonTextStyle extends StatelessWidget {
         color: Colors.white,
         fontSize: 15,
         fontWeight: FontWeight.w800,
+      ),
+    );
+  }
+}
+
+class AppBarTitle extends StatelessWidget {
+  const AppBarTitle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      'Coffee Break',
+      style: TextStyle(color: white, fontSize: 30, fontWeight: FontWeight.bold),
+    );
+  }
+}
+
+class MenuText extends StatelessWidget {
+  final String data;
+  const MenuText({super.key, required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      data,
+      style: TextStyle(
+        color: white,
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
       ),
     );
   }
