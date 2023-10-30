@@ -20,8 +20,8 @@ class CoffeeModelAdapter extends TypeAdapter<CoffeeModel> {
       name: fields[0] as String,
       price: fields[1] as String,
       category: fields[2] as String,
-      imagePath: fields[3] as String,
-      quantity: fields[4] as int,
+      imagePath: fields[3] as String?,
+      quantity: fields[4] as String,
       id: fields[5] as String,
     );
   }

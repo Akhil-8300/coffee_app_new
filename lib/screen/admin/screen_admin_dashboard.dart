@@ -6,7 +6,6 @@ import 'package:coffee_app_new/screen/admin/screen_admin_add_coffee.dart';
 import 'package:coffee_app_new/screen/admin/screen_admin_inventory.dart';
 import 'package:coffee_app_new/screen/admin/screen_admin_revenue.dart';
 import 'package:coffee_app_new/screen/admin/screen_admin_settings.dart';
-import 'package:coffee_app_new/screen/user/screen_intro.dart';
 import 'package:flutter/material.dart';
 
 class ScreenAdminDashBoard extends StatelessWidget {
@@ -29,9 +28,12 @@ class ScreenAdminDashBoard extends StatelessWidget {
           MaterialPageRoute(builder: (ctx) => const AdminRevenueScreen()));
     }
 
-    void gotoAdminSettings(){
-      Navigator.push(context,MaterialPageRoute(builder:(ctx)=>const ScreenAdminSettings()));
+    void gotoAdminSettings() {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (ctx) => const ScreenAdminSettings()));
     }
+
+ 
 
     List<dynamic> gridItems = [
       AdminGridTile(
@@ -117,12 +119,16 @@ class ScreenAdminDashBoard extends StatelessWidget {
         data: 'Revenue',
         onTap: () {
           gotoRevenuePage();
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (ctx) => const TempScreen()));
         },
       ),
       AdminGridTile(
         iconData: Icons.settings,
         data: 'Settings',
-        onTap: () {gotoAdminSettings();},
+        onTap: () {
+          gotoAdminSettings();
+        },
       ),
     ];
     return Scaffold(
@@ -141,12 +147,7 @@ class ScreenAdminDashBoard extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          IconButton(
-              onPressed: () => Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (ctx) => const ScreenIntro())),
-              icon: const Icon(Icons.logout))
-        ],
+       
       ),
       body: SafeArea(
         child: Padding(

@@ -25,7 +25,7 @@ class ScreenLoginRoute extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => Navigator.pushReplacement(
+            onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (ctx) => const ScreenAdminLogin(),
@@ -39,62 +39,32 @@ class ScreenLoginRoute extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (ctx) =>  const ScreenSignup())),
-            child: Container(
-              height: screenHeight / 2,
-              color: subTitles,
-              child: const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'NEW USER',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Take me to registration',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: GestureDetector(
+      body: SafeArea(
+        child: Column(
+          children: [
+            GestureDetector(
               onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (ctx) => const ScreenLogin())),
+                  MaterialPageRoute(builder: (ctx) =>  const ScreenSignup())),
               child: Container(
-                height: screenHeight / 2,
-                color: mainTitles,
-                child: const Center(
+                height: screenHeight / 2.1,
+                color: mainbg,
+                child:  Center(
                   child: Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'EXISTING USER',
+                          'NEW USER',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: mainTitles,
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          'Take me to login',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          'Take me to registration',
+                          style: TextStyle(color:mainTitles, fontSize: 16),
                         )
                       ],
                     ),
@@ -102,8 +72,40 @@ class ScreenLoginRoute extends StatelessWidget {
                 ),
               ),
             ),
-          )
-        ],
+            Expanded(
+              child: GestureDetector(
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (ctx) => const ScreenLogin())),
+                child: Container(
+                  height: screenHeight / 2,
+                  color: mainTitles,
+                  child: const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'EXISTING USER',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Take me to login',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

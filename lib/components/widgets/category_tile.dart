@@ -4,8 +4,15 @@ import 'package:flutter/material.dart';
 
 class CategoryTile extends StatelessWidget {
   final CategoryModel category;
+  final void Function()? onEdit;
+  final void Function()? onDelete;
 
-  const CategoryTile({super.key, required this.category});
+  const CategoryTile({
+    super.key,
+    required this.category,
+    this.onEdit,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,16 +21,34 @@ class CategoryTile extends StatelessWidget {
         color: coffeeTileBg,
         borderRadius: BorderRadius.circular(12),
       ),
-      margin: const EdgeInsets.only(left: 25, right: 25, bottom: 10),
-      padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 10),
+      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       child: ListTile(
         leading: Text(category.id),
         title: Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Text(
-            category.name,
+            category.name.toUpperCase(),
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
+        ),
+        trailing: Wrap(
+          children: [
+            IconButton(
+              onPressed: onEdit,
+              icon: Icon(
+                Icons.edit,
+                color: mainTitles,
+              ),
+            ),
+            IconButton(
+              onPressed: onDelete,
+              icon: Icon(
+                Icons.delete,
+                color: mainTitles,
+              ),
+            ),
+          ],
         ),
       ),
     );

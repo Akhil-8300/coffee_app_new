@@ -2,15 +2,14 @@
 
 import 'package:coffee_app_new/components/constants/colors.dart';
 import 'package:coffee_app_new/components/constants/font_style.dart';
+import 'package:coffee_app_new/components/model/admin_model.dart';
 import 'package:coffee_app_new/components/widgets/my_button.dart';
 import 'package:coffee_app_new/components/widgets/my_textfield.dart';
+import 'package:coffee_app_new/main.dart';
 import 'package:coffee_app_new/screen/admin/screen_admin_dashboard.dart';
 import 'package:flutter/material.dart';
-
-final _adminUsernameController = TextEditingController();
-final _adminPasswordController = TextEditingController();
-final formkey = GlobalKey<FormState>();
-bool obscureValuePass = true;
+import 'package:hive/hive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ScreenAdminLogin extends StatefulWidget {
   const ScreenAdminLogin({super.key});
@@ -20,6 +19,9 @@ class ScreenAdminLogin extends StatefulWidget {
 }
 
 class _ScreenAdminLoginState extends State<ScreenAdminLogin> {
+  final _adminPasswordController = TextEditingController();
+  final _adminLoginKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = true;
   @override
   Widget build(BuildContext context) {
     // double screenHeight = MediaQuery.of(context).size.height;
@@ -58,32 +60,30 @@ class _ScreenAdminLoginState extends State<ScreenAdminLogin> {
                   child: Column(
                     children: [
                       Form(
-                          key: formkey,
+                          key: _adminLoginKey,
                           child: Column(
                             children: [
-                              MyCustomTextField(
+                              const MyCustomTextField(
                                 label: 'Username',
-                                controller: _adminUsernameController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter username';
-                                  }
-                                  return null;
-                                },
+                                initialValue: 'Admin',
+                                readonly: true,
                               ),
                               MyCustomTextField(
+                                obscure: _isPasswordVisible,
                                 suffixIcon: IconButton(
                                     onPressed: () {
-                                      passwordShow();
+                                      setState(() {
+                                        _isPasswordVisible =
+                                            !_isPasswordVisible;
+                                      });
                                     },
                                     icon: Icon(
-                                      obscureValuePass
+                                      _isPasswordVisible
                                           ? Icons.visibility
                                           : Icons.visibility_off,
                                       color: mainTitles,
                                     )),
                                 label: 'Password',
-                                obscure: obscureValuePass,
                                 controller: _adminPasswordController,
                                 validator: (value) {
                                   RegExp regx = RegExp(
@@ -97,7 +97,15 @@ class _ScreenAdminLoginState extends State<ScreenAdminLogin> {
                               ),
                             ],
                           )),
-                      MyButton(onPressed: () => _loginAdmin(), data: 'Login'),
+                      MyButton(
+                          onPressed: () {
+                            if (_adminLoginKey.currentState!.validate()) {
+                              _loginAdmin();
+                            } else {
+                              showCustomSnackBarFail('Validation Fail');
+                            }
+                          },
+                          data: 'Login'),
                     ],
                   ),
                 ),
@@ -110,18 +118,10 @@ class _ScreenAdminLoginState extends State<ScreenAdminLogin> {
   }
 
   void gotoAdminHome() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (ctx) => const ScreenAdminDashBoard()));
-  }
-
-  passwordShow() {
-    setState(() {
-      if (obscureValuePass == false) {
-        obscureValuePass = true;
-      } else {
-        obscureValuePass = false;
-      }
-    });
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (ctx) => const ScreenAdminDashBoard()),
+        (route) => false);
   }
 
   void showCustomSnackBarSave() {
@@ -135,24 +135,29 @@ class _ScreenAdminLoginState extends State<ScreenAdminLogin> {
     );
   }
 
-  void _loginAdmin() {
-    final username = _adminUsernameController.text.trim();
+  void showCustomSnackBarFail(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        margin: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _loginAdmin() async {
     final password = _adminPasswordController.text;
-    if (formkey.currentState!.validate()) {
-      ///todo savetodb()
+    final adminBox = await Hive.openBox<Admin>('AdminBox');
+    final admin = adminBox.get(0);
+    if (admin != null && admin.password == _adminPasswordController.text) {
       showCustomSnackBarSave();
-      _adminUsernameController.clear();
       _adminPasswordController.clear();
+      final sharedPref = await SharedPreferences.getInstance();
+      sharedPref.setBool(adminLogStatus, true);
       gotoAdminHome();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Enter valid data'),
-          backgroundColor: Colors.red,
-          margin: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      showCustomSnackBarFail('Login Failed');
     }
   }
 }

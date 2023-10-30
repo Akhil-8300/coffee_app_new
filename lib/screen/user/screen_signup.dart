@@ -21,9 +21,9 @@ class _ScreenSignupState extends State<ScreenSignup> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
-  final formkey = GlobalKey<FormState>();
-  bool obscureValuePass = true;
-  bool obscureValueRepass = true;
+  final userSignupformkey = GlobalKey<FormState>();
+  bool _isPassVisible = false;
+  bool _isRePassVisible = false;
   @override
   Widget build(BuildContext context) {
     // double screenHeight = MediaQuery.of(context).size.height;
@@ -65,7 +65,7 @@ class _ScreenSignupState extends State<ScreenSignup> {
                     child: Column(
                       children: [
                         Form(
-                            key: formkey,
+                            key: userSignupformkey,
                             child: Column(
                               children: [
                                 MyCustomTextField(
@@ -116,18 +116,20 @@ class _ScreenSignupState extends State<ScreenSignup> {
                                   },
                                 ),
                                 MyCustomTextField(
+                                  obscure: !_isPassVisible,
                                   suffixIcon: IconButton(
                                       onPressed: () {
-                                        passwordShow();
+                                        setState(() {
+                                          _isPassVisible = !_isPassVisible;
+                                        });
                                       },
                                       icon: Icon(
-                                        obscureValuePass
+                                        _isPassVisible
                                             ? Icons.visibility
                                             : Icons.visibility_off,
                                         color: mainTitles,
                                       )),
                                   label: 'Password',
-                                  obscure: obscureValuePass,
                                   controller: _passwordController,
                                   validator: (value) {
                                     RegExp regx = RegExp(
@@ -140,19 +142,21 @@ class _ScreenSignupState extends State<ScreenSignup> {
                                   },
                                 ),
                                 MyCustomTextField(
+                                  obscure: !_isRePassVisible,
                                   label: 'Re-Enter Password',
                                   suffixIcon: IconButton(
                                       onPressed: () {
-                                        rePasswordShow();
+                                        setState(() {
+                                          _isRePassVisible = !_isRePassVisible;
+                                        });
                                       },
                                       icon: Icon(
-                                        obscureValueRepass
+                                        _isRePassVisible
                                             ? Icons.visibility
                                             : Icons.visibility_off,
                                         color: mainTitles,
                                       )),
                                   controller: _rePasswordController,
-                                  obscure: obscureValueRepass,
                                   validator: (value) {
                                     if (_passwordController.text != value) {
                                       return 'Password not matching';
@@ -166,7 +170,6 @@ class _ScreenSignupState extends State<ScreenSignup> {
                         MyButton(
                             onPressed: () {
                               _signUpUser();
-                             
                             },
                             data: 'Sign Up'),
                         Padding(
@@ -218,26 +221,6 @@ class _ScreenSignupState extends State<ScreenSignup> {
         context, MaterialPageRoute(builder: (ctx) => const ScreenLogin()));
   }
 
-  passwordShow() {
-    setState(() {
-      if (obscureValuePass == false) {
-        obscureValuePass = true;
-      } else {
-        obscureValuePass = false;
-      }
-    });
-  }
-
-  rePasswordShow() {
-    setState(() {
-      if (obscureValueRepass == false) {
-        obscureValueRepass = true;
-      } else {
-        obscureValueRepass = false;
-      }
-    });
-  }
-
   void showCustomSnackBarSave() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -256,7 +239,7 @@ class _ScreenSignupState extends State<ScreenSignup> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
     final confirmPassword = _rePasswordController.text.trim();
-    if (formkey.currentState!.validate()) {
+    if (userSignupformkey.currentState!.validate()) {
       ///todo savetodb()
       showCustomSnackBarSave();
       _nameController.clear();
@@ -265,7 +248,7 @@ class _ScreenSignupState extends State<ScreenSignup> {
       _emailController.clear();
       _passwordController.clear();
       _rePasswordController.clear();
-       gotoLogin();
+      gotoLogin();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

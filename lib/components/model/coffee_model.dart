@@ -9,9 +9,9 @@ class CoffeeModel {
   @HiveField(2)
   final String category;
   @HiveField(3)
-  final String imagePath;
+  final String? imagePath;
   @HiveField(4)
-  final int quantity;
+  final String quantity;
   @HiveField(5)
   final String id;
 

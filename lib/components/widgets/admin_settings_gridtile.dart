@@ -1,11 +1,11 @@
 import 'package:coffee_app_new/components/constants/colors.dart';
 import 'package:flutter/material.dart';
 
-class AdminGridTile extends StatelessWidget {
+class AdminSettingsGridTile extends StatelessWidget {
   final IconData iconData;
   final String data;
   final VoidCallback onTap;
-  const AdminGridTile({super.key, required this.iconData, required this.data, required this.onTap});
+  const AdminSettingsGridTile({super.key, required this.iconData, required this.data, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class AdminGridTile extends StatelessWidget {
                   data,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

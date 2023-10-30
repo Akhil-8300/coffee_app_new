@@ -1,3 +1,4 @@
+import 'package:coffee_app_new/components/constants/font_style.dart';
 import 'package:coffee_app_new/components/model/category_model.dart';
 import 'package:coffee_app_new/components/model/coffee_shop.dart';
 import 'package:coffee_app_new/components/widgets/categorylist_for_provider.dart';
@@ -17,7 +18,7 @@ class AddCategoryToDB extends StatefulWidget {
 class _AddCoffeeToDBState extends State<AddCategoryToDB> {
   final TextEditingController categoryController = TextEditingController();
   final TextEditingController categoryIdController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+  final adminAddCatFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class _AddCoffeeToDBState extends State<AddCategoryToDB> {
       var count = provider.categories.length;
       return Scaffold(
         appBar: AppBar(
+          backgroundColor: mainTitles,
           title: const Text(
             'Add New Category',
             style: TextStyle(
@@ -47,33 +49,64 @@ class _AddCoffeeToDBState extends State<AddCategoryToDB> {
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(
-            key: formKey,
+            key: adminAddCatFormKey,
             child: Column(
               children: [
                 MyCustomTextField(
-                    label: 'Category ID', controller: categoryIdController),
+                  label: 'Category ID',
+                  controller: categoryIdController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a value";
+                    } else {
+                      for (var element in provider.categories) {
+                        if (element.id.toLowerCase() == value.toLowerCase()) {
+                          return "This category ID already exists!";
+                        }
+                      }
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(height: 15.0),
                 MyCustomTextField(
                   label: 'Category',
                   controller: categoryController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Enter a category';
+                      return "Please enter a value";
                     } else {
-                      return null;
+                      for (var element in provider.categories) {
+                        if (element.name.toLowerCase() == value.toLowerCase()) {
+                          return "This category already exists!";
+                        }
+                      }
                     }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 15.0),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: mainTitles),
                   onPressed: () {
-                    addCategory();
-                    provider.getCategoryData();
-                    debugPrint('Category added${provider.categories}');
+                    if (adminAddCatFormKey.currentState!.validate()) {
+                      addCategory();
+                      provider.getCategoryData();
+                    } else {
+                      showErrorSnackBar();
+                    }
                   },
                   child: const Text('Add Category'),
                 ),
+                Divider(
+                  color: mainTitles,
+                ),
+                Row(
+                  children: [
+                    MySubheadings(data: 'Categories'),
+                  ],
+                ),
+                const SizedBox(height: 10),
                 const Expanded(
                   child: CategoryList(),
                 ),
@@ -96,24 +129,24 @@ class _AddCoffeeToDBState extends State<AddCategoryToDB> {
     );
   }
 
+  void showErrorSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Enter valid data'),
+        backgroundColor: Colors.red,
+        margin: EdgeInsets.all(10),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
   void addCategory() async {
-    final categoryId = categoryIdController.text.trim();
-    final categoryname = categoryController.text.trim();
+    final categoryId = categoryIdController.text.trim().toUpperCase();
+    final categoryname = categoryController.text.trim().toUpperCase();
     final category = CategoryModel(id: categoryId, name: categoryname);
-    if (formKey.currentState!.validate()) {
-      await addCategoryToDb(categoryId: categoryId, category: category);
-      categoryController.clear();
-      categoryIdController.clear();
-      showCustomSnackBar();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Enter valid data'),
-          backgroundColor: Colors.red,
-          margin: EdgeInsets.all(10),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    }
+    await addCategoryToDb(categoryId: categoryId, category: category);
+    categoryController.clear();
+    categoryIdController.clear();
+    showCustomSnackBar();
   }
 }

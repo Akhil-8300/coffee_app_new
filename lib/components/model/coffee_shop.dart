@@ -7,21 +7,21 @@ class CoffeeShopProvider extends ChangeNotifier {
   List<CoffeeModel> shop = [];
 
   Future<void> getCoffeeData() async {
-    var coffeeBox = await Hive.openBox<CoffeeModel>('CoffeeBox1');
-
+    var coffeeBox = await Hive.openBox<CoffeeModel>('CoffeeBoxNew');
     shop.clear();
     shop.addAll(coffeeBox.values);
     notifyListeners();
     debugPrint('called');
     Hive.close();
   }
-
-  List<CategoryModel> categories = [];
+   List<CategoryModel> categories = [];
+  CategoryModel? selectedCategory;
   Future<void> getCategoryData() async {
-    var categoryBox = await Hive.openBox<CategoryModel>('CategoryBox');
+    var categoryBox = await Hive.openBox<CategoryModel>('CategoryBoxNew');
     categories.clear();
     categories.addAll(categoryBox.values);
     notifyListeners();
+    debugPrint('Called provider');
     // Hive.close();
   }
 
@@ -39,14 +39,16 @@ class CoffeeShopProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-      void showSuccessSnackBar(BuildContext context) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Success'),
-          backgroundColor: Colors.green,
-          margin: EdgeInsets.all(10),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    }
+  // void showSuccessSnackBar(BuildContext context) {
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     const SnackBar(
+  //       content: Text('Success'),
+  //       backgroundColor: Colors.green,
+  //       margin: EdgeInsets.all(10),
+  //       behavior: SnackBarBehavior.floating,
+  //     ),
+  //   );
+  // }
+
+ 
 }

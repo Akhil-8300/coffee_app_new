@@ -4,9 +4,11 @@ import 'package:coffee_app_new/components/constants/colors.dart';
 import 'package:coffee_app_new/components/constants/font_style.dart';
 import 'package:coffee_app_new/components/widgets/my_button.dart';
 import 'package:coffee_app_new/components/widgets/my_textfield.dart';
+import 'package:coffee_app_new/main.dart';
 import 'package:coffee_app_new/screen/user/screen_home.dart';
 import 'package:coffee_app_new/screen/user/screen_signup.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ScreenLogin extends StatefulWidget {
   const ScreenLogin({super.key});
@@ -19,8 +21,8 @@ class _ScreenSignupState extends State<ScreenLogin> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  final formkey = GlobalKey<FormState>();
-  bool obscureValuePass = true;
+  final userLoginformkey = GlobalKey<FormState>();
+  bool _isPasswordVisible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +50,7 @@ class _ScreenSignupState extends State<ScreenLogin> {
                 child: Text(
                   "LOGIN",
                   style: TextStyle(
-                      color: white,
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold),
+                      color: white, fontSize: 40, fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(
@@ -62,7 +62,7 @@ class _ScreenSignupState extends State<ScreenLogin> {
                   child: Column(
                     children: [
                       Form(
-                          key: formkey,
+                          key: userLoginformkey,
                           child: Column(
                             children: [
                               MyCustomTextField(
@@ -76,18 +76,21 @@ class _ScreenSignupState extends State<ScreenLogin> {
                                 },
                               ),
                               MyCustomTextField(
+                                obscure: !_isPasswordVisible,
                                 suffixIcon: IconButton(
                                     onPressed: () {
-                                      passwordShow();
+                                      setState(() {
+                                        _isPasswordVisible =
+                                            !_isPasswordVisible;
+                                      });
                                     },
                                     icon: Icon(
-                                      obscureValuePass
+                                      _isPasswordVisible
                                           ? Icons.visibility
                                           : Icons.visibility_off,
                                       color: mainTitles,
                                     )),
                                 label: 'Password',
-                                obscure: obscureValuePass,
                                 controller: _passwordController,
                                 validator: (value) {
                                   RegExp regx = RegExp(
@@ -101,8 +104,7 @@ class _ScreenSignupState extends State<ScreenLogin> {
                               ),
                             ],
                           )),
-                      MyButton(
-                          onPressed: () => _loginUser(), data: 'Login'),
+                      MyButton(onPressed: () => _loginUser(), data: 'Login'),
                       Padding(
                         padding: const EdgeInsets.only(top: 15),
                         child: Row(
@@ -146,20 +148,11 @@ class _ScreenSignupState extends State<ScreenLogin> {
     );
   }
 
-
-
-  void gotoHome(){
-    Navigator.push(context, MaterialPageRoute(builder: (ctx)=>const ScreenHome()));
-  }
-
-  passwordShow() {
-    setState(() {
-      if (obscureValuePass == false) {
-        obscureValuePass = true;
-      } else {
-        obscureValuePass = false;
-      }
-    });
+  void gotoHome() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (ctx) => const ScreenHome()),
+        (route) => false);
   }
 
   void showCustomSnackBarSave() {
@@ -173,14 +166,18 @@ class _ScreenSignupState extends State<ScreenLogin> {
     );
   }
 
-  void _loginUser() {
+  void _loginUser() async {
     final username = _usernameController.text.trim();
-    final password = _passwordController.text;
-    if (formkey.currentState!.validate()) {
+    final password = _passwordController.text.trim();
+    if (userLoginformkey.currentState!.validate()) {
       ///todo savetodb()
       showCustomSnackBarSave();
       _usernameController.clear();
       _passwordController.clear();
+
+      final sharedPref = await SharedPreferences.getInstance();
+      sharedPref.setBool(userLogStatus, true);
+
       gotoHome();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

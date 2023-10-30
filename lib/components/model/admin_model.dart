@@ -1,16 +1,14 @@
-
-// @HiveType(typeId: 1)
+import 'package:hive_flutter/hive_flutter.dart';
+part 'admin_model.g.dart';
+@HiveType(typeId: 3)
 class Admin {
-  // @HiveField(0)
+  @HiveField(0)
   final String username;
-  //  @HiveField(1)
+  @HiveField(1)
   final String password;
-  //  @HiveField(2)
-  final String profilePhoto;
 
   Admin({
     required this.username,
     required this.password,
-    required this.profilePhoto,
   });
 }

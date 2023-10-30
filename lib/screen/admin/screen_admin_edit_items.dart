@@ -24,7 +24,8 @@ class ScreenAdminEditItems extends StatelessWidget {
         TextEditingController(text: coffee.quantity.toString());
     final coffeeId = coffee.id;
     var imageData = coffee.imagePath;
-    final formKey = GlobalKey<FormState>();
+    final adminEditItemsformKey = GlobalKey<FormState>();
+
     void showSuccessSnackBar() {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -41,7 +42,7 @@ class ScreenAdminEditItems extends StatelessWidget {
       final category = categoryController.text.trim();
       final price = priceController.text.trim();
       debugPrint(name);
-      final quantity = int.parse(quantityController.text.trim());
+      final quantity = quantityController.text.trim();
 
       final coffee = CoffeeModel(
         name: name,
@@ -52,7 +53,7 @@ class ScreenAdminEditItems extends StatelessWidget {
         id: coffeeId,
       );
 
-      if (formKey.currentState!.validate()) {
+      if (adminEditItemsformKey.currentState!.validate()) {
         await updateItemsDb(productId: coffee.id, coffee: coffee);
         debugPrint('success');
         showSuccessSnackBar();
@@ -80,15 +81,16 @@ class ScreenAdminEditItems extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Form(
-                key: formKey,
+                key: adminEditItemsformKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    MyHeadings(data: 'PRODUCT ID: ${coffee.id}'),
+                    MyHeadings(data: 'PRODUCT ID: $coffeeId'),
                     const SizedBox(height: 15),
                     InkWell(
                       onTap: () async {
                         imageData = await pickImage();
+                        coffeeProvider.getCoffeeData();
                       },
                       child: Image(
                         image: imageProcessor(imageData),

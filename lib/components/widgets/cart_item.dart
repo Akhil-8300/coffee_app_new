@@ -1,6 +1,5 @@
 import 'package:coffee_app_new/components/constants/colors.dart';
 import 'package:coffee_app_new/components/model/coffee_model.dart';
-import 'package:coffee_app_new/components/widgets/my_dropdown.dart';
 import 'package:flutter/material.dart';
 
 class CartItem extends StatefulWidget {
@@ -50,7 +49,7 @@ class _CartItemState extends State<CartItem> {
       child: Column(
         children: [
           ListTile(
-            leading: Image.asset(widget.coffee.imagePath),
+            leading: Image.asset(widget.coffee.imagePath!),
             title: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Text(
@@ -67,14 +66,14 @@ class _CartItemState extends State<CartItem> {
               onPressed: widget.onPressed,
             ),
           ),
-          const Padding(
+           const Padding(
             padding: EdgeInsets.only(left: 25),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text('Qty'),
                 SizedBox(width: 30),
-                MyDropDownMenu(),
+               
               ],
             ),
           ),

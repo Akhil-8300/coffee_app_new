@@ -1,13 +1,14 @@
 import 'package:coffee_app_new/components/constants/colors.dart';
 import 'package:coffee_app_new/components/constants/font_style.dart';
+import 'package:coffee_app_new/components/widgets/custom_search.dart';
 import 'package:coffee_app_new/components/widgets/my_bottom_navbar.dart';
+import 'package:coffee_app_new/main.dart';
 import 'package:coffee_app_new/screen/user/screen_about.dart';
 import 'package:coffee_app_new/screen/user/screen_cart.dart';
-
-import 'package:coffee_app_new/screen/user/screen_intro.dart';
+import 'package:coffee_app_new/screen/user/screen_routing.dart';
 import 'package:coffee_app_new/screen/user/screen_shop.dart';
-
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ScreenHome extends StatefulWidget {
   const ScreenHome({super.key});
@@ -28,6 +29,13 @@ class _ScreenHomeState extends State<ScreenHome> {
     const ScreenShop(),
     const ScreenCart(),
   ];
+
+  void _logout() async {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (ctx) => const ScreenLoginRoute()));
+    final sharedPref = await SharedPreferences.getInstance();
+    sharedPref.setBool(userLogStatus, false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +63,17 @@ class _ScreenHomeState extends State<ScreenHome> {
             },
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: CustomSearchDelegate(),
+              );
+            },
+            icon: const Icon(Icons.search),
+          ),
+        ],
       ),
       drawer: Drawer(
         backgroundColor: mainTitles,
@@ -152,8 +171,7 @@ class _ScreenHomeState extends State<ScreenHome> {
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (ctx) => const ScreenIntro()));
+                _logout();
               },
               child: Padding(
                 padding: const EdgeInsets.only(left: 25.0, bottom: 25),
